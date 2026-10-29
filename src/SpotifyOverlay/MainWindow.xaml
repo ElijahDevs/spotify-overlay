@@ -1,0 +1,186 @@
+<Window
+    x:Class="SpotifyOverlay.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Spotify Overlay"
+    Width="420"
+    Height="224"
+    WindowStyle="None"
+    ResizeMode="NoResize"
+    AllowsTransparency="True"
+    Background="Transparent"
+    Topmost="True"
+    ShowInTaskbar="True"
+    ShowActivated="False"
+    UseLayoutRounding="True">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Foreground" Value="#EDF4F0" />
+            <Setter Property="Background" Value="#25312C" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="Chrome"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="8"
+                            Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Chrome" Property="Background" Value="#3B5144" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.35" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Border
+        CornerRadius="16"
+        Background="#F0121916"
+        BorderBrush="#394B40"
+        BorderThickness="1"
+        Padding="18,13,18,12">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="23" />
+                <RowDefinition Height="67" />
+                <RowDefinition Height="17" />
+                <RowDefinition Height="32" />
+                <RowDefinition Height="34" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid MouseLeftButtonDown="DragHeader" Cursor="SizeAll" Background="Transparent">
+                <StackPanel Orientation="Horizontal">
+                    <Ellipse Width="7" Height="7" Fill="#1ED760" Margin="0,0,8,0" />
+                    <TextBlock Text="SPOTIFY" FontSize="10" FontWeight="Bold" Foreground="#A2B6A9" VerticalAlignment="Center" />
+                </StackPanel>
+                <TextBlock
+                    x:Name="ModeLabel"
+                    Text="BUTTONS ONLY · CTRL ALT L TO MOVE"
+                    FontSize="9"
+                    Foreground="#91A699"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center" />
+            </Grid>
+            <Grid Grid.Row="1" Margin="0,4,0,3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="62" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border
+                    Width="56"
+                    Height="56"
+                    CornerRadius="9"
+                    Background="#26392C"
+                    ClipToBounds="True"
+                    HorizontalAlignment="Left">
+                    <Grid>
+                        <TextBlock
+                            Text="♫"
+                            Foreground="#1ED760"
+                            FontSize="30"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
+                        <Image x:Name="Cover" Stretch="UniformToFill" />
+                    </Grid>
+                </Border>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="9,0,0,0">
+                    <TextBlock
+                        x:Name="Track"
+                        Text="Connecting to Spotify…"
+                        Foreground="#F3F7F4"
+                        FontSize="17"
+                        FontWeight="SemiBold"
+                        TextTrimming="CharacterEllipsis"
+                        ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" />
+                    <TextBlock
+                        x:Name="Artist"
+                        Text="Start a song in the Spotify desktop app"
+                        Foreground="#9DB0A3"
+                        FontSize="12"
+                        Margin="0,5,0,0"
+                        TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Row="2" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="72" />
+                </Grid.ColumnDefinitions>
+                <ProgressBar
+                    x:Name="Progress"
+                    Height="3"
+                    Maximum="1"
+                    Value="0"
+                    Foreground="#1ED760"
+                    Background="#304036"
+                    BorderThickness="0" />
+                <TextBlock
+                    x:Name="TimeLabel"
+                    Grid.Column="1"
+                    Text="0:00 / 0:00"
+                    HorizontalAlignment="Right"
+                    Foreground="#8DA394"
+                    FontSize="9" />
+            </Grid>
+            <Grid Grid.Row="3" Margin="0,2,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="110" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="Previous" Width="37" Click="PreviousClick" ToolTip="Previous · Ctrl+Alt+Left">
+                        <TextBlock Text="" FontFamily="Segoe MDL2 Assets" FontSize="13" />
+                    </Button>
+                    <Button
+                        x:Name="PlayPause"
+                        Width="45"
+                        Margin="6,0,6,0"
+                        Click="PlayClick"
+                        Background="#1B7340"
+                        ToolTip="Play / pause · Ctrl+Alt+Space">
+                        <TextBlock x:Name="PlayIcon" Text="" FontFamily="Segoe MDL2 Assets" FontSize="13" />
+                    </Button>
+                    <Button x:Name="Next" Width="37" Click="NextClick" ToolTip="Next · Ctrl+Alt+Right">
+                        <TextBlock Text="" FontFamily="Segoe MDL2 Assets" FontSize="13" />
+                    </Button>
+                    <TextBlock
+                        x:Name="PlaybackLabel"
+                        Text="WAITING"
+                        Foreground="#99AC9F"
+                        FontSize="9"
+                        VerticalAlignment="Center"
+                        Margin="12,0,0,0" />
+                </StackPanel>
+                <Button
+                    x:Name="HideButton"
+                    Grid.Column="1"
+                    Content="Hide · Ctrl Alt O"
+                    FontSize="10"
+                    Background="#25312C"
+                    Click="HideClick" />
+            </Grid>
+            <Grid Grid.Row="4" Margin="0,4,0,0">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                <Button x:Name="LibraryButton" Content="Search / library" Click="LibraryClick" FontSize="11" Margin="0,0,5,0" />
+                <Button x:Name="LikeCurrentButton" Grid.Column="1" Content="Like current song" Click="LikeCurrentClick" FontSize="11" Margin="5,0,0,0" />
+            </Grid>
+            <TextBlock
+                x:Name="Hint"
+                Grid.Row="5"
+                Text="SKIP  CTRL ALT →     •     PLAY / PAUSE  CTRL ALT SPACE"
+                FontSize="8.5"
+                Foreground="#91A699"
+                VerticalAlignment="Bottom" />
+        </Grid>
+    </Border>
+</Window>

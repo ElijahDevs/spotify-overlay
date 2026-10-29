@@ -1,0 +1,97 @@
+<Window x:Class="SpotifyOverlay.LibraryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Spotify Overlay — Search and library" Width="810" Height="680"
+        MinWidth="660" MinHeight="580" Background="#121916" Foreground="#EDF4F0"
+        WindowStartupLocation="CenterScreen" FontFamily="Segoe UI" FontSize="13">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#294335" />
+            <Setter Property="Foreground" Value="#EDF4F0" />
+            <Setter Property="Padding" Value="14,8" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Margin" Value="0,0,8,0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Chrome" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Chrome" Property="Background" Value="#3B614A" /></Trigger>
+                            <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.4" /></Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="#24322A" />
+            <Setter Property="Foreground" Value="#EDF4F0" />
+            <Setter Property="CaretBrush" Value="White" />
+            <Setter Property="BorderBrush" Value="#46594C" />
+            <Setter Property="Padding" Value="9,7" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+    </Window.Resources>
+    <Grid Margin="22">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" /><RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" /><RowDefinition Height="*" />
+            <RowDefinition Height="Auto" /><RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <DockPanel Margin="0,0,0,14">
+            <Button x:Name="AccountButton" DockPanel.Dock="Right" Content="Connect Spotify" Click="ConnectClick" />
+            <TextBlock Text="Search and library" FontSize="23" FontWeight="SemiBold" VerticalAlignment="Center" />
+        </DockPanel>
+        <Border x:Name="SetupPanel" Grid.Row="1" Background="#1C2A21" CornerRadius="8" Padding="15" Margin="0,0,0,14">
+            <StackPanel>
+                <TextBlock Text="Connect your Spotify account" FontWeight="SemiBold" Margin="0,0,0,7" />
+                <TextBlock TextWrapping="Wrap" Foreground="#B3C6B9"
+                           Text="Create an app in Spotify's Developer Dashboard. Select Web API, add the redirect address below, and copy its Client ID here. Your app owner account needs Premium; add other accounts under Users Management." />
+                <TextBox Text="http://127.0.0.1:43821/callback" IsReadOnly="True" Foreground="#1ED760" Margin="0,8,0,8" AutomationProperties.Name="Spotify redirect address" />
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Content="Open dashboard" Click="DashboardClick" Margin="8,0,0,0" />
+                    <TextBox x:Name="ClientIdBox" ToolTip="Spotify developer app Client ID" AutomationProperties.Name="Spotify Client ID" />
+                </DockPanel>
+                <TextBlock Text="Click Connect Spotify to sign in in your browser. No client secret is needed." Foreground="#B3C6B9" Margin="0,8,0,0" TextWrapping="Wrap" />
+            </StackPanel>
+        </Border>
+        <Grid x:Name="BrowsePanel" Grid.Row="2" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+            <TextBox x:Name="SearchBox" KeyDown="SearchKeyDown" ToolTip="Song, artist, or album" AutomationProperties.Name="Search songs" />
+            <Button x:Name="SearchButton" Grid.Column="1" Content="Search" Click="SearchClick" Margin="8,0,8,0" />
+            <Button x:Name="LikedButton" Grid.Column="2" Content="Liked Songs" Click="LikedClick" Margin="0" />
+        </Grid>
+        <ListBox x:Name="Results" Grid.Row="3" Background="#17231C" BorderThickness="0" Foreground="#EDF4F0"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="SelectionChanged" MouseDoubleClick="ResultDoubleClick">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Padding" Value="10,9" />
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{Binding Artist}" Foreground="#9FB8A7" Margin="0,3,0,0" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{Binding Album}" Foreground="#839C8B" FontSize="11" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <DockPanel Grid.Row="4" Margin="0,14,0,0">
+            <Button x:Name="MoreButton" DockPanel.Dock="Right" Content="Load more" Click="MoreClick" Margin="0" IsEnabled="False" />
+            <StackPanel x:Name="ActionsPanel" Orientation="Horizontal" IsEnabled="False">
+                <Button Content="Play" Click="PlayClick" Background="#1B7340" />
+                <Button Content="Add to queue" Click="QueueClick" />
+                <Button x:Name="LikeButton" Content="Like song" Click="LikeClick" IsEnabled="False" />
+                <Button Content="Open in Spotify" Click="OpenClick" />
+            </StackPanel>
+        </DockPanel>
+        <TextBlock x:Name="Status" Grid.Row="5" Margin="0,14,0,0" Foreground="#A8BFAF" TextWrapping="Wrap"
+                   Text="Connect Spotify to search songs and manage Liked Songs." />
+    </Grid>
+</Window>
